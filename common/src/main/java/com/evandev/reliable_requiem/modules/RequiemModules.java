@@ -1,5 +1,6 @@
 package com.evandev.reliable_requiem.modules;
 
+import com.evandev.reliable_requiem.Constants;
 import com.evandev.reliable_requiem.api.IPlayerKeptItems;
 import com.evandev.reliable_requiem.config.ModConfig;
 import net.minecraft.core.BlockPos;
@@ -13,6 +14,7 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -23,6 +25,7 @@ import java.util.Random;
 public class RequiemModules {
 
     public static final TagKey<Enchantment> SOULBOUND_TAG = TagKey.create(Registries.ENCHANTMENT, Identifier.fromNamespaceAndPath("c", "soulbound"));
+    public static final TagKey<Item> RETAINED_ON_DEATH_TAG = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(Constants.MOD_ID, "retained_on_death"));
     private static final Random RAND = new Random();
 
     public static void onPlayerClone(ServerPlayer original, ServerPlayer newPlayer, boolean wasDeath) {
@@ -129,7 +132,9 @@ public class RequiemModules {
             keepChance = config.keepOffhandChance;
         }
 
-        if (forceKeep || hasSoulbound || (keepChance > 0 && RAND.nextDouble() < keepChance)) {
+        boolean hasRetainedTag = stack.is(RETAINED_ON_DEATH_TAG);
+
+        if (forceKeep || hasSoulbound || hasRetainedTag || (keepChance > 0 && RAND.nextDouble() < keepChance)) {
             if (stack.isDamageableItem() && config.keepDurabilityLoss > 0) {
                 int damageAmount = (int) (stack.getMaxDamage() * config.keepDurabilityLoss);
                 stack.hurtAndBreak(damageAmount, player.level(), player, (p) -> {
