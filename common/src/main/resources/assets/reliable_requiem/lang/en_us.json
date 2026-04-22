@@ -1,0 +1,53 @@
+{
+  "config.reliable_requiem.title": "Reliable Requiem Configuration",
+
+  "config.reliable_requiem.category.general": "General Settings",
+  "config.reliable_requiem.category.hunger": "Hunger",
+  "config.reliable_requiem.category.experience": "Experience",
+  "config.reliable_requiem.category.inventory": "Inventory",
+  "config.reliable_requiem.category.health_and_respawning": "Health & Respawning",
+  "config.reliable_requiem.category.memento_mori": "Memento Mori",
+  "config.reliable_requiem.category.miscellaneous": "Miscellaneous",
+  "config.reliable_requiem.category.effects": "Effects",
+
+  "config.reliable_requiem.enabled": "Enable Mod",
+
+  "config.reliable_requiem.keepFood": "Keep Food Level",
+  "config.reliable_requiem.keepSaturation": "Keep Saturation",
+  "config.reliable_requiem.minFood": "Minimum Food on Respawn",
+  "config.reliable_requiem.maxFood": "Maximum Food on Respawn",
+  "config.reliable_requiem.keepPositiveEffects": "Keep Positive Effects",
+  "config.reliable_requiem.keepNegativeEffects": "Keep Negative Effects",
+
+  "config.reliable_requiem.lostXpPercent": "Lost XP Percentage",
+  "config.reliable_requiem.droppedXpPerLevel": "Dropped XP Per Level",
+  "config.reliable_requiem.maxDroppedXp": "Max Dropped XP",
+
+  "config.reliable_requiem.keepMainInventoryChance": "Keep Main Inv Chance",
+  "config.reliable_requiem.keepHotbarChance": "Keep Hotbar Chance",
+  "config.reliable_requiem.keepArmorChance": "Keep Armor Chance",
+  "config.reliable_requiem.keepOffhandChance": "Keep Offhand Chance",
+  "config.reliable_requiem.keepDurabilityLoss": "Durability Loss on Keep",
+  "config.reliable_requiem.defaultKeepChance": "Keep Item Chance",
+  "config.reliable_requiem.defaultDestroyChance": "Destroy Dropped Item Chance",
+  "config.reliable_requiem.dropDespawnTime": "Drop Despawn Time (Seconds)",
+  "config.reliable_requiem.keptItemOverrides": "Kept Item Overrides (IDs)",
+  "config.reliable_requiem.droppedItemOverrides": "Dropped Item Overrides (IDs)",
+  "config.reliable_requiem.destroyedItemOverrides": "Destroyed Item Overrides (IDs)",
+  "config.reliable_requiem.bypassKeepInventoryDimensions": "Bypass Keep-Inv Dimensions",
+  "config.reliable_requiem.bypassDamageSources": "Bypass Keep-Inv Damage Sources",
+
+  "config.reliable_requiem.scaleRespawnHealth": "Scale Respawn Health",
+  "config.reliable_requiem.respawnHealthPercent": "Respawn Health %",
+  "config.reliable_requiem.maxRespawnHealth": "Max Respawn Health",
+  "config.reliable_requiem.respawnRandomRadius": "Random Respawn Radius",
+  "config.reliable_requiem.respawnHealth": "Respawn Health (0 = Max)",
+  "config.reliable_requiem.restrictRespawning": "Restrict Spawn Points (Beds)",
+
+  "config.reliable_requiem.applyMementoMori": "Enable Memento Mori",
+  "config.reliable_requiem.mementoDuration": "Duration (Ticks)",
+  "config.reliable_requiem.mementoSpeedModifier": "Speed Modifier",
+  "config.reliable_requiem.mementoDamageModifier": "Damage Modifier",
+
+  "effect.reliable_requiem.memento_mori": "Memento Mori"
+}

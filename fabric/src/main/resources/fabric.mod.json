@@ -8,24 +8,21 @@
     "${mod_author}"
   ],
   "contact": {
-    "homepage": "https://github.com/evanbones/Mod-Template",
-    "sources": "https://github.com/evanbones/Mod-Template"
+    "homepage": "https://github.com/evanbones/Reliable-Requiem",
+    "sources": "https://github.com/evanbones/Reliable-Requiem"
   },
   "license": "${license}",
   "icon": "${mod_id}.png",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.evandev.mod_template.ExampleMod"
+      "com.evandev.reliable_requiem.ReliableRequiem"
     ],
     "client": [
-      "com.evandev.mod_template.client.ExampleModClient"
-    ],
-    "fabric-datagen": [
-      "com.evandev.mod_template.datagen.TemplateDataGenerator"
+      "com.evandev.reliable_requiem.client.ReliableRequiemClient"
     ],
     "modmenu": [
-      "com.evandev.mod_template.client.ModMenuIntegration"
+      "com.evandev.reliable_requiem.client.ModMenuIntegration"
     ]
   },
   "mixins": [
