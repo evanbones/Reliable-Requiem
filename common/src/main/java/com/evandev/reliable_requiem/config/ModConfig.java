@@ -68,6 +68,7 @@ public class ModConfig {
     // Miscellaneous Settings
     public boolean restrictRespawning = false;
     public int respawnRandomRadius = 0;
+    public boolean displayDeathCoordinates = true;
 
     public static ModConfig get() {
         if (INSTANCE == null) {

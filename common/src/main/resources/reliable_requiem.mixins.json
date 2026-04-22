@@ -4,10 +4,13 @@
   "package": "com.evandev.reliable_requiem.mixin",
   "compatibilityLevel": "JAVA_18",
   "mixins": [
+    "ItemEntityMixin",
+    "LivingEntityMixin",
     "PlayerMixin",
     "ServerPlayerMixin"
   ],
   "client": [
+    "DeathScreenMixin"
   ],
   "server": [],
   "injectors": {

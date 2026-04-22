@@ -1,7 +1,7 @@
 package com.evandev.reliable_requiem;
 
-import com.evandev.reliable_requiem.client.ClientConfigSetup;
 import com.evandev.reliable_requiem.api.IPlayerKeptItems;
+import com.evandev.reliable_requiem.client.ClientConfigSetup;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
@@ -13,7 +13,7 @@ import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
-import java.util.List;
+import java.util.Map;
 
 @Mod(Constants.MOD_ID)
 public class ReliableRequiem {
@@ -38,9 +38,12 @@ public class ReliableRequiem {
             CommonClass.onPlayerClone(oldPlayer, newPlayer, event.isWasDeath());
 
             if (event.isWasDeath()) {
-                List<ItemStack> keptItems = ((IPlayerKeptItems) oldPlayer).reliableRequiem$getKeptItems();
-                for (ItemStack stack : keptItems) {
-                    newPlayer.getInventory().add(stack);
+                Map<Integer, ItemStack> keptItems = ((IPlayerKeptItems) oldPlayer).reliableRequiem$getKeptItems();
+
+                for (Map.Entry<Integer, ItemStack> entry : keptItems.entrySet()) {
+                    int slot = entry.getKey();
+                    ItemStack stack = entry.getValue();
+                    newPlayer.getInventory().setItem(slot, stack);
                 }
             }
         }

@@ -10,7 +10,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gamerules.GameRules;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,14 +21,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @Mixin(Player.class)
 public abstract class PlayerMixin implements IPlayerKeptItems {
 
     @Unique
-    private List<ItemStack> reliableRequiem$keptItems = new ArrayList<>();
+    private Map<Integer, ItemStack> reliableRequiem$keptItems = new HashMap<>();
 
     @Unique
     private BlockPos reliableRequiem$lastDeathPos;
@@ -37,12 +40,12 @@ public abstract class PlayerMixin implements IPlayerKeptItems {
     private String reliableRequiem$lastDamageSource = "";
 
     @Override
-    public List<ItemStack> reliableRequiem$getKeptItems() {
+    public Map<Integer, ItemStack> reliableRequiem$getKeptItems() {
         return reliableRequiem$keptItems;
     }
 
     @Override
-    public void reliableRequiem$setKeptItems(List<ItemStack> items) {
+    public void reliableRequiem$setKeptItems(Map<Integer, ItemStack> items) {
         this.reliableRequiem$keptItems = items;
     }
 
@@ -85,24 +88,33 @@ public abstract class PlayerMixin implements IPlayerKeptItems {
     }
 
     @Inject(method = "dropEquipment", at = @At("HEAD"))
-    private void onDropEquipment(CallbackInfo ci) {
+    private void onDropEquipment(ServerLevel level, CallbackInfo ci) {
         Player player = (Player) (Object) this;
         if (!(player instanceof ServerPlayer serverPlayer)) return;
 
+        if (level.getGameRules().get(GameRules.KEEP_INVENTORY)) {
+            return;
+        }
+
         Inventory inv = player.getInventory();
-        List<ItemStack> kept = new ArrayList<>();
+        Map<Integer, ItemStack> kept = new HashMap<>();
 
         for (int i = 0; i < inv.getContainerSize(); i++) {
             ItemStack stack = inv.getItem(i);
             if (!stack.isEmpty()) {
+                if (EnchantmentHelper.has(stack, EnchantmentEffectComponents.PREVENT_EQUIPMENT_DROP)) {
+                    continue;
+                }
+
                 if (!RequiemModules.processItemOnDeath(stack, serverPlayer, i)) {
                     if (!stack.isEmpty()) {
-                        kept.add(stack.copy());
+                        kept.put(i, stack.copy());
                     }
                     inv.setItem(i, ItemStack.EMPTY);
                 }
             }
         }
+
         reliableRequiem$setKeptItems(kept);
     }
 

@@ -5,7 +5,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.List;
+import java.util.Map;
 
 public class ReliableRequiem implements ModInitializer {
 
@@ -19,9 +19,12 @@ public class ReliableRequiem implements ModInitializer {
             CommonClass.onPlayerClone(oldPlayer, newPlayer, wasDeath);
 
             if (wasDeath) {
-                List<ItemStack> keptItems = ((IPlayerKeptItems) oldPlayer).reliableRequiem$getKeptItems();
-                for (ItemStack stack : keptItems) {
-                    newPlayer.getInventory().add(stack);
+                Map<Integer, ItemStack> keptItems = ((IPlayerKeptItems) oldPlayer).reliableRequiem$getKeptItems();
+
+                for (Map.Entry<Integer, ItemStack> entry : keptItems.entrySet()) {
+                    int slot = entry.getKey();
+                    ItemStack stack = entry.getValue();
+                    newPlayer.getInventory().setItem(slot, stack);
                 }
             }
         });

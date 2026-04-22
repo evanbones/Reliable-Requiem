@@ -5,12 +5,12 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-import java.util.List;
+import java.util.Map;
 
 public interface IPlayerKeptItems {
-    List<ItemStack> reliableRequiem$getKeptItems();
+    Map<Integer, ItemStack> reliableRequiem$getKeptItems();
 
-    void reliableRequiem$setKeptItems(List<ItemStack> items);
+    void reliableRequiem$setKeptItems(Map<Integer, ItemStack> items);
 
     BlockPos reliableRequiem$getLastDeathPos();
 
