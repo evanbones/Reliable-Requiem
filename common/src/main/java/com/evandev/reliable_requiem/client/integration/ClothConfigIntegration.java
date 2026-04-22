@@ -94,6 +94,18 @@ public class ClothConfigIntegration {
                 .setDefaultValue(300).setMin(0)
                 .setTooltip(Component.translatable("config.reliable_requiem.dropDespawnTime.tooltip"))
                 .setSaveConsumer(val -> config.dropDespawnTime = val).build());
+        inventory.addEntry(entryBuilder.startBooleanToggle(Component.translatable("config.reliable_requiem.neverDespawnDeathDrops"), config.neverDespawnDeathDrops)
+                .setDefaultValue(false)
+                .setTooltip(Component.translatable("config.reliable_requiem.neverDespawnDeathDrops.tooltip"))
+                .setSaveConsumer(val -> config.neverDespawnDeathDrops = val).build());
+        inventory.addEntry(entryBuilder.startBooleanToggle(Component.translatable("config.reliable_requiem.condenseDeathDrops"), config.condenseDeathDrops)
+                .setDefaultValue(false)
+                .setTooltip(Component.translatable("config.reliable_requiem.condenseDeathDrops.tooltip"))
+                .setSaveConsumer(val -> config.condenseDeathDrops = val).build());
+        inventory.addEntry(entryBuilder.startBooleanToggle(Component.translatable("config.reliable_requiem.explosionResistantDeathDrops"), config.explosionResistantDeathDrops)
+                .setDefaultValue(false)
+                .setTooltip(Component.translatable("config.reliable_requiem.explosionResistantDeathDrops.tooltip"))
+                .setSaveConsumer(val -> config.explosionResistantDeathDrops = val).build());
         inventory.addEntry(entryBuilder.startStrList(Component.translatable("config.reliable_requiem.keptItemOverrides"), config.keptItemOverrides)
                 .setDefaultValue(new ArrayList<>())
                 .setTooltip(Component.translatable("config.reliable_requiem.keptItemOverrides.tooltip"))

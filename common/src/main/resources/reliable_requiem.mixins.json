@@ -4,6 +4,7 @@
   "package": "com.evandev.reliable_requiem.mixin",
   "compatibilityLevel": "JAVA_18",
   "mixins": [
+    "ExperienceOrbMixin",
     "ItemEntityMixin",
     "LivingEntityMixin",
     "PlayerMixin",
