@@ -12,7 +12,7 @@ public class ExampleMod {
     public ExampleMod(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener(this::commonSetup);
 
-        if (FMLEnvironment.dist.isClient()) {
+        if (FMLEnvironment.getDist().isClient()) {
             ClientConfigSetup.register(modContainer);
         }
     }
