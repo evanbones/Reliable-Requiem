@@ -38,6 +38,12 @@
   "config.reliable_requiem.defaultDestroyChance.tooltip": "Chance (0.0 to 1.0) that an item meant to be dropped is entirely destroyed instead.",
   "config.reliable_requiem.dropDespawnTime": "Item Despawn Time (Seconds)",
   "config.reliable_requiem.dropDespawnTime.tooltip": "How long in seconds dropped items stay on the ground before despawning.",
+  "config.reliable_requiem.neverDespawnDeathDrops": "Never Despawn Death Drops",
+  "config.reliable_requiem.neverDespawnDeathDrops.tooltip": "If enabled, items dropped on death will never naturally despawn, ignoring the standard despawn timer.",
+  "config.reliable_requiem.condenseDeathDrops": "Condense Death Drops",
+  "config.reliable_requiem.condenseDeathDrops.tooltip": "If enabled, items and experience dropped on death will drop directly onto your corpse instead of splattering outward.",
+  "config.reliable_requiem.explosionResistantDeathDrops": "Explosion Resistant Items",
+  "config.reliable_requiem.explosionResistantDeathDrops.tooltip": "If enabled, items dropped on death cannot be destroyed by explosions like creepers or TNT.",
 
   "config.reliable_requiem.category.overrides": "Overrides & Exceptions",
   "config.reliable_requiem.keptItemOverrides": "Kept Item Overrides (IDs)",

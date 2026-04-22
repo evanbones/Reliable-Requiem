@@ -3,6 +3,7 @@ package com.evandev.reliable_requiem.mixin;
 import com.evandev.reliable_requiem.api.IRequiemItem;
 import com.evandev.reliable_requiem.config.ModConfig;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.spongepowered.asm.mixin.Mixin;
@@ -11,6 +12,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ItemEntity.class)
 public abstract class ItemEntityMixin implements IRequiemItem {
@@ -35,10 +37,23 @@ public abstract class ItemEntityMixin implements IRequiemItem {
     private void reliableRequiem$onTick(CallbackInfo ci) {
         ItemEntity item = (ItemEntity) (Object) this;
         if (!item.level().isClientSide() && ModConfig.get().enabled && this.reliableRequiem$droppedOnDeath) {
-            int configuredTimeInTicks = ModConfig.get().dropDespawnTime * 20;
-            if (configuredTimeInTicks > 0 && this.age >= configuredTimeInTicks) {
-                item.discard();
+            if (ModConfig.get().neverDespawnDeathDrops) {
+                if (this.age > 4000) {
+                    this.age = 0;
+                }
+            } else {
+                int configuredTimeInTicks = ModConfig.get().dropDespawnTime * 20;
+                if (configuredTimeInTicks > 0 && this.age >= configuredTimeInTicks) {
+                    item.discard();
+                }
             }
+        }
+    }
+
+    @Inject(method = "ignoreExplosion", at = @At("HEAD"), cancellable = true)
+    private void reliableRequiem$onIgnoreExplosion(Explosion explosion, CallbackInfoReturnable<Boolean> cir) {
+        if (ModConfig.get().enabled && ModConfig.get().explosionResistantDeathDrops && this.reliableRequiem$droppedOnDeath) {
+            cir.setReturnValue(true);
         }
     }
 

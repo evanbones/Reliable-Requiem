@@ -38,8 +38,11 @@ public class ModConfig {
     public double keepArmorChance = 0.0;
     public double keepOffhandChance = 0.0;
     public double defaultDestroyChance = 0.0;
-    public int dropDespawnTime = 300; // TODO
+    public int dropDespawnTime = 300;
     public double keepDurabilityLoss = 0.10;
+    public boolean neverDespawnDeathDrops = false;
+    public boolean condenseDeathDrops = false;
+    public boolean explosionResistantDeathDrops = false;
 
     // Item Overrides
     public List<String> keptItemOverrides = new ArrayList<>();

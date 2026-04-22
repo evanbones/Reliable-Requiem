@@ -6,7 +6,7 @@
 
 ## License
 
-[![Code license (MIT)](https://img.shields.io/badge/code%20license-MIT-green.svg?style=flat-square)](https://github.com/evanbones/Reliable-Requiem/blob/1.20.1/LICENSE)
+[![Code license (LGPL-3.0-only)](https://img.shields.io/badge/code%20license-LGPL-3.0-only-green.svg?style=flat-square)](https://github.com/evanbones/Reliable-Requiem/blob/26.1/LICENSE)
 
 ---
 

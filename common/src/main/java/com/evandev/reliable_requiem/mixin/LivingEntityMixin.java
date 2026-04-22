@@ -1,6 +1,7 @@
 package com.evandev.reliable_requiem.mixin;
 
 import com.evandev.reliable_requiem.api.IRequiemItem;
+import com.evandev.reliable_requiem.config.ModConfig;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -26,6 +27,10 @@ public abstract class LivingEntityMixin {
 
         if (droppedItem != null && (Object) this instanceof Player && this.isDeadOrDying()) {
             ((IRequiemItem) droppedItem).reliableRequiem$setDroppedOnDeath(true);
+
+            if (ModConfig.get().enabled && ModConfig.get().condenseDeathDrops) {
+                droppedItem.setDeltaMovement(0, 0, 0);
+            }
         }
     }
 }
