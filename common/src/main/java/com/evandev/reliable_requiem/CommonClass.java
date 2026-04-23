@@ -11,7 +11,6 @@ public class CommonClass {
 
     public static void init() {
         ModConfig.get();
-        ModEffects.init();
     }
 
     public static void onPlayerClone(ServerPlayer oldPlayer, ServerPlayer newPlayer, boolean wasDeath) {

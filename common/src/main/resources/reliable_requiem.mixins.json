@@ -6,7 +6,6 @@
   "mixins": [
     "ExperienceOrbMixin",
     "ItemEntityMixin",
-    "LivingEntityMixin",
     "PlayerMixin",
     "ServerPlayerMixin"
   ],

@@ -3,7 +3,7 @@ package com.evandev.reliable_requiem.mixin;
 import com.evandev.reliable_requiem.api.IPlayerKeptItems;
 import com.evandev.reliable_requiem.config.ModConfig;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.DeathScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
@@ -21,8 +21,8 @@ public abstract class DeathScreenMixin extends Screen {
         super(title);
     }
 
-    @Inject(method = "extractRenderState", at = @At("TAIL"))
-    private void reliableRequiem$onRender(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a, CallbackInfo ci) {
+    @Inject(method = "render", at = @At("TAIL"))
+    private void reliableRequiem$onRender(GuiGraphics graphics, int mouseX, int mouseY, float a, CallbackInfo ci) {
         if (ModConfig.get().enabled && ModConfig.get().displayDeathCoordinates) {
             Player player = Minecraft.getInstance().player;
             if (player != null) {
@@ -36,7 +36,7 @@ public abstract class DeathScreenMixin extends Screen {
                         pos.getZ()
                 );
 
-                graphics.centeredText(this.font, deathCoordsText, this.width / 2, 115, 0xFFFFFFFF);
+                graphics.drawCenteredString(this.font, deathCoordsText, this.width / 2, 115, 0xFFFFFFFF);
             }
         }
     }

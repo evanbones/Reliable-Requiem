@@ -6,7 +6,7 @@ import com.evandev.reliable_requiem.config.ModConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
@@ -24,8 +24,8 @@ import java.util.Random;
 
 public class RequiemModules {
 
-    public static final TagKey<Enchantment> SOULBOUND_TAG = TagKey.create(Registries.ENCHANTMENT, Identifier.fromNamespaceAndPath("c", "soulbound"));
-    public static final TagKey<Item> RETAINED_ON_DEATH_TAG = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(Constants.MOD_ID, "retained_on_death"));
+    public static final TagKey<Enchantment> SOULBOUND_TAG = TagKey.create(Registries.ENCHANTMENT, ResourceLocation.fromNamespaceAndPath("c", "soulbound"));
+    public static final TagKey<Item> RETAINED_ON_DEATH_TAG = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "retained_on_death"));
     private static final Random RAND = new Random();
 
     public static void onPlayerClone(ServerPlayer original, ServerPlayer newPlayer, boolean wasDeath) {
@@ -92,7 +92,7 @@ public class RequiemModules {
         if (!ModConfig.get().enabled || stack.isEmpty()) return true;
         ModConfig config = ModConfig.get();
 
-        String currentDimension = player.level().dimension().identifier().toString();
+        String currentDimension = player.level().dimension().location().toString();
         if (config.bypassKeepInventoryDimensions.contains(currentDimension)) {
             return true;
         }
@@ -113,7 +113,8 @@ public class RequiemModules {
         boolean forceKeep = config.keptItemOverrides.contains(itemId);
 
         boolean hasSoulbound = false;
-        var enchantments = EnchantmentHelper.getEnchantmentsForCrafting(stack);
+        var enchantments = stack.getEnchantments();
+
         for (var holder : enchantments.keySet()) {
             if (holder.is(SOULBOUND_TAG)) {
                 hasSoulbound = true;
@@ -137,7 +138,8 @@ public class RequiemModules {
         if (forceKeep || hasSoulbound || hasRetainedTag || (keepChance > 0 && RAND.nextDouble() < keepChance)) {
             if (stack.isDamageableItem() && config.keepDurabilityLoss > 0) {
                 int damageAmount = (int) (stack.getMaxDamage() * config.keepDurabilityLoss);
-                stack.hurtAndBreak(damageAmount, player.level(), player, (p) -> {
+
+                stack.hurtAndBreak(damageAmount, player.serverLevel(), player, (brokenItem) -> {
                 });
             }
             return false;

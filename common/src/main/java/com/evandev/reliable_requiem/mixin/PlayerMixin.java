@@ -2,18 +2,20 @@ package com.evandev.reliable_requiem.mixin;
 
 import com.evandev.reliable_requiem.CommonClass;
 import com.evandev.reliable_requiem.api.IPlayerKeptItems;
+import com.evandev.reliable_requiem.api.IRequiemItem;
+import com.evandev.reliable_requiem.config.ModConfig;
 import com.evandev.reliable_requiem.modules.RequiemModules;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.gamerules.GameRules;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -87,12 +89,29 @@ public abstract class PlayerMixin implements IPlayerKeptItems {
         this.reliableRequiem$setLastDamageSource(source.getMsgId());
     }
 
+    @Inject(
+            method = "drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;",
+            at = @At("RETURN")
+    )
+    private void reliableRequiem$tagDeathDrops(ItemStack itemStack, boolean randomly, boolean thrownFromHand, CallbackInfoReturnable<ItemEntity> cir) {
+        ItemEntity droppedItem = cir.getReturnValue();
+        Player player = (Player) (Object) this;
+
+        if (droppedItem != null && player.isDeadOrDying()) {
+            ((IRequiemItem) droppedItem).reliableRequiem$setDroppedOnDeath(true);
+
+            if (ModConfig.get().enabled && ModConfig.get().condenseDeathDrops) {
+                droppedItem.setDeltaMovement(0, 0, 0);
+            }
+        }
+    }
+
     @Inject(method = "dropEquipment", at = @At("HEAD"))
-    private void onDropEquipment(ServerLevel level, CallbackInfo ci) {
+    private void onDropEquipment(CallbackInfo ci) {
         Player player = (Player) (Object) this;
         if (!(player instanceof ServerPlayer serverPlayer)) return;
 
-        if (level.getGameRules().get(GameRules.KEEP_INVENTORY)) {
+        if (player.level().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
             return;
         }
 
@@ -119,7 +138,7 @@ public abstract class PlayerMixin implements IPlayerKeptItems {
     }
 
     @Inject(method = "getBaseExperienceReward", at = @At("RETURN"), cancellable = true)
-    protected void onGetExperienceReward(ServerLevel level, CallbackInfoReturnable<Integer> cir) {
+    protected void onGetExperienceReward(CallbackInfoReturnable<Integer> cir) {
         Player player = (Player) (Object) this;
         int originalDrop = cir.getReturnValue();
         cir.setReturnValue(CommonClass.onExperienceDrop(player, originalDrop));
