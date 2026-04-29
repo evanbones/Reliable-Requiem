@@ -12,7 +12,6 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
@@ -121,7 +120,7 @@ public abstract class PlayerMixin implements IPlayerKeptItems {
         for (int i = 0; i < inv.getContainerSize(); i++) {
             ItemStack stack = inv.getItem(i);
             if (!stack.isEmpty()) {
-                if (EnchantmentHelper.has(stack, EnchantmentEffectComponents.PREVENT_EQUIPMENT_DROP)) {
+                if (EnchantmentHelper.hasVanishingCurse(stack)) {
                     continue;
                 }
 
@@ -137,7 +136,7 @@ public abstract class PlayerMixin implements IPlayerKeptItems {
         reliableRequiem$setKeptItems(kept);
     }
 
-    @Inject(method = "getBaseExperienceReward", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "getExperienceReward", at = @At("RETURN"), cancellable = true)
     protected void onGetExperienceReward(CallbackInfoReturnable<Integer> cir) {
         Player player = (Player) (Object) this;
         int originalDrop = cir.getReturnValue();

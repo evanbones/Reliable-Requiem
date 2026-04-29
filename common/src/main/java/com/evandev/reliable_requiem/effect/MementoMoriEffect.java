@@ -1,7 +1,6 @@
 package com.evandev.reliable_requiem.effect;
 
 import com.evandev.reliable_requiem.config.ModConfig;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -9,13 +8,10 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 
 public class MementoMoriEffect extends MobEffect {
 
-    private static final ResourceLocation MOVEMENT_MOD_ID = ResourceLocation.fromNamespaceAndPath("reliable_requiem", "memento_mori_movement");
-    private static final ResourceLocation DAMAGE_MOD_ID = ResourceLocation.fromNamespaceAndPath("reliable_requiem", "memento_mori_damage");
-
     public MementoMoriEffect() {
         super(MobEffectCategory.HARMFUL, 0x4A4A4A);
 
-        this.addAttributeModifier(Attributes.MOVEMENT_SPEED, MOVEMENT_MOD_ID, ModConfig.get().mementoSpeedModifier, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
-        this.addAttributeModifier(Attributes.ATTACK_DAMAGE, DAMAGE_MOD_ID, ModConfig.get().mementoDamageModifier, AttributeModifier.Operation.ADD_VALUE);
+        this.addAttributeModifier(Attributes.MOVEMENT_SPEED, "71056c28-2b81-43e9-a477-809623e1b764", ModConfig.get().mementoSpeedModifier, AttributeModifier.Operation.MULTIPLY_TOTAL);
+        this.addAttributeModifier(Attributes.ATTACK_DAMAGE, "8b139031-1554-469b-8eab-8c9df410c538", ModConfig.get().mementoDamageModifier, AttributeModifier.Operation.ADDITION);
     }
 }

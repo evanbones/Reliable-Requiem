@@ -24,8 +24,8 @@ import java.util.Random;
 
 public class RequiemModules {
 
-    public static final TagKey<Enchantment> SOULBOUND_TAG = TagKey.create(Registries.ENCHANTMENT, ResourceLocation.fromNamespaceAndPath("c", "soulbound"));
-    public static final TagKey<Item> RETAINED_ON_DEATH_TAG = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "retained_on_death"));
+    public static final TagKey<Enchantment> SOULBOUND_TAG = TagKey.create(Registries.ENCHANTMENT, new ResourceLocation("c", "soulbound"));
+    public static final TagKey<Item> RETAINED_ON_DEATH_TAG = TagKey.create(Registries.ITEM, new ResourceLocation(Constants.MOD_ID, "retained_on_death"));
     private static final Random RAND = new Random();
 
     public static void onPlayerClone(ServerPlayer original, ServerPlayer newPlayer, boolean wasDeath) {
@@ -42,7 +42,7 @@ public class RequiemModules {
         // Effects Module
         if (config.keepPositiveEffects || config.keepNegativeEffects) {
             for (MobEffectInstance effectInstance : original.getActiveEffects()) {
-                boolean isHarmful = effectInstance.getEffect().value().getCategory() == MobEffectCategory.HARMFUL;
+                boolean isHarmful = effectInstance.getEffect().getCategory() == MobEffectCategory.HARMFUL;
                 if ((isHarmful && config.keepNegativeEffects) || (!isHarmful && config.keepPositiveEffects)) {
                     if (effectInstance.getEffect().equals(ModEffects.MEMENTO_MORI)) continue;
                     newPlayer.addEffect(new MobEffectInstance(effectInstance));
@@ -113,10 +113,9 @@ public class RequiemModules {
         boolean forceKeep = config.keptItemOverrides.contains(itemId);
 
         boolean hasSoulbound = false;
-        var enchantments = stack.getEnchantments();
-
-        for (var holder : enchantments.keySet()) {
-            if (holder.is(SOULBOUND_TAG)) {
+        var enchantments = EnchantmentHelper.getEnchantments(stack);
+        for (Enchantment enchantment : enchantments.keySet()) {
+            if (BuiltInRegistries.ENCHANTMENT.wrapAsHolder(enchantment).is(SOULBOUND_TAG)) {
                 hasSoulbound = true;
                 break;
             }
@@ -139,7 +138,7 @@ public class RequiemModules {
             if (stack.isDamageableItem() && config.keepDurabilityLoss > 0) {
                 int damageAmount = (int) (stack.getMaxDamage() * config.keepDurabilityLoss);
 
-                stack.hurtAndBreak(damageAmount, player.serverLevel(), player, (brokenItem) -> {
+                stack.hurtAndBreak(damageAmount, player, (brokenItem) -> {
                 });
             }
             return false;
@@ -162,9 +161,9 @@ public class RequiemModules {
 
     public static boolean shouldDropItem(ItemStack stack) {
         if (!ModConfig.get().enabled || stack.isEmpty()) return true;
-        var enchantments = EnchantmentHelper.getEnchantmentsForCrafting(stack);
-        for (var holder : enchantments.keySet()) {
-            if (holder.is(SOULBOUND_TAG)) return false;
+        var enchantments = EnchantmentHelper.getEnchantments(stack);
+        for (Enchantment enchantment : enchantments.keySet()) {
+            if (BuiltInRegistries.ENCHANTMENT.wrapAsHolder(enchantment).is(SOULBOUND_TAG)) return false;
         }
         return true;
     }
