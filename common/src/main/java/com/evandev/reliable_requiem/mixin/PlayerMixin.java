@@ -8,6 +8,7 @@ import com.evandev.reliable_requiem.modules.RequiemModules;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -81,11 +82,11 @@ public abstract class PlayerMixin implements IPlayerKeptItems {
     }
 
     @Inject(method = "die", at = @At("HEAD"))
-    private void onDie(net.minecraft.world.damagesource.DamageSource source, CallbackInfo ci) {
+    private void onDie(DamageSource cause, CallbackInfo ci) {
         Player player = (Player) (Object) this;
         this.reliableRequiem$setLastDeathPos(player.blockPosition());
         this.reliableRequiem$setLastDeathDimension(player.level().dimension());
-        this.reliableRequiem$setLastDamageSource(source.getMsgId());
+        this.reliableRequiem$setLastDamageSource(cause.getMsgId());
     }
 
     @Inject(
