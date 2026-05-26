@@ -6,7 +6,12 @@ import com.evandev.reliable_requiem.api.IRequiemItem;
 import com.evandev.reliable_requiem.config.ModConfig;
 import com.evandev.reliable_requiem.modules.RequiemModules;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -106,7 +111,7 @@ public abstract class PlayerMixin implements IPlayerKeptItems {
         }
     }
 
-    @Inject(method = "dropEquipment", at = @At("HEAD"))
+    @Inject(method = "dropEquipment", at = @At("HEAD"), cancellable = true)
     private void onDropEquipment(CallbackInfo ci) {
         Player player = (Player) (Object) this;
         if (!(player instanceof ServerPlayer serverPlayer)) return;
@@ -121,20 +126,80 @@ public abstract class PlayerMixin implements IPlayerKeptItems {
         for (int i = 0; i < inv.getContainerSize(); i++) {
             ItemStack stack = inv.getItem(i);
             if (!stack.isEmpty()) {
+
                 if (EnchantmentHelper.hasVanishingCurse(stack)) {
+                    inv.setItem(i, ItemStack.EMPTY);
                     continue;
                 }
 
                 if (!RequiemModules.processItemOnDeath(stack, serverPlayer, i)) {
                     if (!stack.isEmpty()) {
                         kept.put(i, stack.copy());
+                    } else {
+                        inv.setItem(i, ItemStack.EMPTY);
                     }
+                } else {
+                    player.drop(stack, true, false);
                     inv.setItem(i, ItemStack.EMPTY);
                 }
             }
         }
 
         reliableRequiem$setKeptItems(kept);
+        ci.cancel();
+    }
+
+    @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
+    private void reliableRequiem$saveAdditionalData(CompoundTag compound, CallbackInfo ci) {
+        ListTag keptItemsList = new ListTag();
+        for (Map.Entry<Integer, ItemStack> entry : this.reliableRequiem$keptItems.entrySet()) {
+            CompoundTag slotTag = new CompoundTag();
+            slotTag.putInt("Slot", entry.getKey());
+            slotTag.put("Item", entry.getValue().save(new CompoundTag()));
+            keptItemsList.add(slotTag);
+        }
+        compound.put("ReliableRequiem_KeptItems", keptItemsList);
+
+        if (this.reliableRequiem$lastDeathPos != null) {
+            compound.putLong("ReliableRequiem_DeathPos", this.reliableRequiem$lastDeathPos.asLong());
+        }
+        if (this.reliableRequiem$lastDeathDimension != null) {
+            compound.putString("ReliableRequiem_DeathDim", this.reliableRequiem$lastDeathDimension.location().toString());
+        }
+        if (this.reliableRequiem$lastDamageSource != null) {
+            compound.putString("ReliableRequiem_DamageSource", this.reliableRequiem$lastDamageSource);
+        }
+    }
+
+    @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
+    private void reliableRequiem$loadAdditionalData(CompoundTag compound, CallbackInfo ci) {
+        this.reliableRequiem$keptItems.clear();
+
+        if (compound.contains("ReliableRequiem_KeptItems", Tag.TAG_LIST)) {
+            ListTag listTag = compound.getList("ReliableRequiem_KeptItems", Tag.TAG_COMPOUND);
+            for (int i = 0; i < listTag.size(); i++) {
+                CompoundTag slotTag = listTag.getCompound(i);
+                int slot = slotTag.getInt("Slot");
+
+                ItemStack stack = ItemStack.of(slotTag.getCompound("Item"));
+                if (!stack.isEmpty()) {
+                    this.reliableRequiem$keptItems.put(slot, stack);
+                }
+            }
+        }
+
+        if (compound.contains("ReliableRequiem_DeathPos")) {
+            this.reliableRequiem$lastDeathPos = BlockPos.of(compound.getLong("ReliableRequiem_DeathPos"));
+        }
+        if (compound.contains("ReliableRequiem_DeathDim")) {
+            this.reliableRequiem$lastDeathDimension = ResourceKey.create(
+                    Registries.DIMENSION,
+                    new ResourceLocation(compound.getString("ReliableRequiem_DeathDim"))
+            );
+        }
+        if (compound.contains("ReliableRequiem_DamageSource")) {
+            this.reliableRequiem$lastDamageSource = compound.getString("ReliableRequiem_DamageSource");
+        }
     }
 
     @Inject(method = "getExperienceReward", at = @At("RETURN"), cancellable = true)
