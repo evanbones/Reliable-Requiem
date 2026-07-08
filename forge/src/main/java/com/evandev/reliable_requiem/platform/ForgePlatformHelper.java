@@ -1,6 +1,8 @@
 package com.evandev.reliable_requiem.platform;
 
+import com.evandev.reliable_requiem.compat.CuriosCompat;
 import com.evandev.reliable_requiem.platform.services.IPlatformHelper;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLLoader;
@@ -33,5 +35,19 @@ public class ForgePlatformHelper implements IPlatformHelper {
     @Override
     public boolean isPhysicalClient() {
         return FMLLoader.getDist() == Dist.CLIENT;
+    }
+
+    @Override
+    public void handleAccessoryDeath(ServerPlayer player, String lastDamageSource) {
+        if (isModLoaded("curios")) {
+            CuriosCompat.handleAccessoryDeath(player, lastDamageSource);
+        }
+    }
+
+    @Override
+    public void restoreKeptAccessories(ServerPlayer newPlayer) {
+        if (isModLoaded("curios")) {
+            CuriosCompat.restoreKeptAccessories(newPlayer);
+        }
     }
 }

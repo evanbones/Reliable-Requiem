@@ -47,6 +47,10 @@ dependencies {
     implementation(jarJar("io.github.llamalad7:mixinextras-forge:${mixinextras_version}"))
     annotationProcessor "io.github.llamalad7:mixinextras-common:${mixinextras_version}"
 
+    // Curios
+    modCompileOnly "top.theillusivec4.curios:curios-forge:${curios_version}:api"
+    modRuntimeOnly "top.theillusivec4.curios:curios-forge:${curios_version}"
+
     // EMI
     modImplementation "dev.emi:emi-forge:${emi_version}"
 

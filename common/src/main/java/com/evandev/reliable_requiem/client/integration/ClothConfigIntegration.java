@@ -77,6 +77,10 @@ public class ClothConfigIntegration {
                 .setDefaultValue(0.0).setMin(0.0).setMax(1.0)
                 .setTooltip(Component.translatable("config.reliable_requiem.keepOffhandChance.tooltip"))
                 .setSaveConsumer(val -> config.keepOffhandChance = val).build());
+        inventory.addEntry(entryBuilder.startDoubleField(Component.translatable("config.reliable_requiem.keepAccessoriesChance"), config.keepAccessoriesChance)
+                .setDefaultValue(0.0).setMin(0.0).setMax(1.0)
+                .setTooltip(Component.translatable("config.reliable_requiem.keepAccessoriesChance.tooltip"))
+                .setSaveConsumer(val -> config.keepAccessoriesChance = val).build());
         inventory.addEntry(entryBuilder.startDoubleField(Component.translatable("config.reliable_requiem.keepDurabilityLoss"), config.keepDurabilityLoss)
                 .setDefaultValue(0.10).setMin(0.0).setMax(1.0)
                 .setTooltip(Component.translatable("config.reliable_requiem.keepDurabilityLoss.tooltip"))

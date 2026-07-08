@@ -6,6 +6,7 @@ import com.evandev.reliable_requiem.config.ModConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -88,6 +89,12 @@ public class RequiemModules {
         return ModConfig.get().enabled && ModConfig.get().restrictRespawning;
     }
 
+    public static void onPlayerRespawn(ServerPlayer player) {
+        for (MobEffectInstance effectInstance : player.getActiveEffects()) {
+            player.connection.send(new ClientboundUpdateMobEffectPacket(player.getId(), effectInstance));
+        }
+    }
+
     public static boolean processItemOnDeath(ItemStack stack, ServerPlayer player, int slotIndex) {
         if (!ModConfig.get().enabled || stack.isEmpty()) return true;
         ModConfig config = ModConfig.get();
@@ -121,16 +128,7 @@ public class RequiemModules {
             }
         }
 
-        double keepChance = 0.0;
-        if (slotIndex >= 0 && slotIndex <= 8) {
-            keepChance = config.keepHotbarChance;
-        } else if (slotIndex >= 9 && slotIndex <= 35) {
-            keepChance = config.keepMainInventoryChance;
-        } else if (slotIndex >= 36 && slotIndex <= 39) {
-            keepChance = config.keepArmorChance;
-        } else if (slotIndex == 40) {
-            keepChance = config.keepOffhandChance;
-        }
+        double keepChance = getKeepChance(slotIndex, config);
 
         boolean hasRetainedTag = stack.is(RETAINED_ON_DEATH_TAG);
 
@@ -150,6 +148,22 @@ public class RequiemModules {
         }
 
         return true;
+    }
+
+    private static double getKeepChance(int slotIndex, ModConfig config) {
+        double keepChance = 0.0;
+        if (slotIndex >= 0 && slotIndex <= 8) {
+            keepChance = config.keepHotbarChance;
+        } else if (slotIndex >= 9 && slotIndex <= 35) {
+            keepChance = config.keepMainInventoryChance;
+        } else if (slotIndex >= 36 && slotIndex <= 39) {
+            keepChance = config.keepArmorChance;
+        } else if (slotIndex == 40) {
+            keepChance = config.keepOffhandChance;
+        } else if (slotIndex == -1) {
+            keepChance = config.keepAccessoriesChance;
+        }
+        return keepChance;
     }
 
     public static int calculateDroppedExperience(Player player, int originalDrop) {
