@@ -65,6 +65,11 @@ repositories {
     }
 
     maven {
+        name = "Ladysnake Libs"
+        url = 'https://maven.ladysnake.org/releases'
+    }
+
+    maven {
         name = "ClothConfig"
         url = "https://maven.shedaniel.me/"
     }

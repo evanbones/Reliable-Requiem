@@ -3,9 +3,12 @@ package com.evandev.reliable_requiem;
 import com.evandev.reliable_requiem.api.IPlayerKeptItems;
 import com.evandev.reliable_requiem.client.ClientConfigSetup;
 import com.evandev.reliable_requiem.modules.ModEffects;
+import com.evandev.reliable_requiem.platform.Services;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -41,13 +44,16 @@ public class ReliableRequiem {
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onPlayerClone(PlayerEvent.Clone event) {
         if (event.getEntity() instanceof ServerPlayer newPlayer && event.getOriginal() instanceof ServerPlayer oldPlayer) {
 
             CommonClass.onPlayerClone(oldPlayer, newPlayer, event.isWasDeath());
 
             if (event.isWasDeath()) {
+                CompoundTag keptAcc = ((IPlayerKeptItems) oldPlayer).reliableRequiem$getKeptAccessories();
+                ((IPlayerKeptItems) newPlayer).reliableRequiem$setKeptAccessories(keptAcc);
+
                 Map<Integer, ItemStack> keptItems = ((IPlayerKeptItems) oldPlayer).reliableRequiem$getKeptItems();
 
                 for (Map.Entry<Integer, ItemStack> entry : keptItems.entrySet()) {
@@ -55,7 +61,16 @@ public class ReliableRequiem {
                     ItemStack stack = entry.getValue();
                     newPlayer.getInventory().setItem(slot, stack);
                 }
+
+                Services.PLATFORM.restoreKeptAccessories(newPlayer);
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) {
+            CommonClass.onPlayerRespawn(player);
         }
     }
 }

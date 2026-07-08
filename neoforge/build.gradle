@@ -43,6 +43,13 @@ dependencies {
 
     // Cloth Config
     implementation "me.shedaniel.cloth:cloth-config-neoforge:${cloth_config_version}"
+
+    // Accessories
+    implementation "maven.modrinth:accessories:${accessories_version_neoforge}"
+    runtimeOnly "maven.modrinth:owo-lib:NMCHU6DZ"
+
+    // Curios
+    compileOnly "maven.modrinth:curios:${curios_version}"
 }
 
 publishMods {

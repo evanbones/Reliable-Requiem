@@ -1,5 +1,7 @@
 package com.evandev.reliable_requiem.platform.services;
 
+import net.minecraft.server.level.ServerPlayer;
+
 import java.nio.file.Path;
 
 public interface IPlatformHelper {
@@ -44,7 +46,18 @@ public interface IPlatformHelper {
 
     /**
      * Checks if the code is running on the physical client.
+     *
      * @return True if on the client, false if on a dedicated server.
      */
     boolean isPhysicalClient();
+
+    /**
+     * Handles keeping and dropping accessories on player death.
+     */
+    void handleAccessoryDeath(ServerPlayer player, String lastDamageSource);
+
+    /**
+     * Restores any kept accessories to the player upon cloning.
+     */
+    void restoreKeptAccessories(ServerPlayer newPlayer);
 }

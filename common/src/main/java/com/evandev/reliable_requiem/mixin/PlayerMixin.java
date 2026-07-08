@@ -5,6 +5,7 @@ import com.evandev.reliable_requiem.api.IPlayerKeptItems;
 import com.evandev.reliable_requiem.api.IRequiemItem;
 import com.evandev.reliable_requiem.config.ModConfig;
 import com.evandev.reliable_requiem.modules.RequiemModules;
+import com.evandev.reliable_requiem.platform.Services;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -46,6 +47,9 @@ public abstract class PlayerMixin implements IPlayerKeptItems {
     @Unique
     private String reliableRequiem$lastDamageSource = "";
 
+    @Unique
+    private CompoundTag reliableRequiem$keptAccessories = new CompoundTag();
+
     @Override
     public Map<Integer, ItemStack> reliableRequiem$getKeptItems() {
         return reliableRequiem$keptItems;
@@ -86,6 +90,16 @@ public abstract class PlayerMixin implements IPlayerKeptItems {
         this.reliableRequiem$lastDamageSource = damageSourceId;
     }
 
+    @Override
+    public CompoundTag reliableRequiem$getKeptAccessories() {
+        return this.reliableRequiem$keptAccessories;
+    }
+
+    @Override
+    public void reliableRequiem$setKeptAccessories(CompoundTag tag) {
+        this.reliableRequiem$keptAccessories = tag;
+    }
+
     @Inject(method = "die", at = @At("HEAD"))
     private void onDie(net.minecraft.world.damagesource.DamageSource source, CallbackInfo ci) {
         Player player = (Player) (Object) this;
@@ -119,6 +133,8 @@ public abstract class PlayerMixin implements IPlayerKeptItems {
         if (player.level().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
             return;
         }
+
+        Services.PLATFORM.handleAccessoryDeath(serverPlayer, this.reliableRequiem$lastDamageSource);
 
         Inventory inv = player.getInventory();
         Map<Integer, ItemStack> kept = new HashMap<>();
@@ -164,6 +180,10 @@ public abstract class PlayerMixin implements IPlayerKeptItems {
         }
         compound.put("ReliableRequiem_KeptItems", keptItemsList);
 
+        if (this.reliableRequiem$keptAccessories != null && !this.reliableRequiem$keptAccessories.isEmpty()) {
+            compound.put("ReliableRequiem_KeptAccessories", this.reliableRequiem$keptAccessories);
+        }
+
         if (this.reliableRequiem$lastDeathPos != null) {
             compound.putLong("ReliableRequiem_DeathPos", this.reliableRequiem$lastDeathPos.asLong());
         }
@@ -190,6 +210,12 @@ public abstract class PlayerMixin implements IPlayerKeptItems {
                     this.reliableRequiem$keptItems.put(slot, stack);
                 }
             }
+        }
+
+        if (compound.contains("ReliableRequiem_KeptAccessories", Tag.TAG_COMPOUND)) {
+            this.reliableRequiem$keptAccessories = compound.getCompound("ReliableRequiem_KeptAccessories");
+        } else {
+            this.reliableRequiem$keptAccessories = new CompoundTag();
         }
 
         if (compound.contains("ReliableRequiem_DeathPos")) {

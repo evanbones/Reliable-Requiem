@@ -17,6 +17,10 @@ public class CommonClass {
         RequiemModules.onPlayerClone(oldPlayer, newPlayer, wasDeath);
     }
 
+    public static void onPlayerRespawn(ServerPlayer player) {
+        RequiemModules.onPlayerRespawn(player);
+    }
+
     public static int onExperienceDrop(Player player, int originalDrop) {
         return RequiemModules.calculateDroppedExperience(player, originalDrop);
     }

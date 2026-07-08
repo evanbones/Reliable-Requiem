@@ -1,6 +1,7 @@
 package com.evandev.reliable_requiem.api;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -23,4 +24,8 @@ public interface IPlayerKeptItems {
     String reliableRequiem$getLastDamageSource();
 
     void reliableRequiem$setLastDamageSource(String damageSourceId);
+
+    CompoundTag reliableRequiem$getKeptAccessories();
+
+    void reliableRequiem$setKeptAccessories(CompoundTag tag);
 }

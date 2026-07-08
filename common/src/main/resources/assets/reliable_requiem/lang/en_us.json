@@ -32,6 +32,8 @@
   "config.reliable_requiem.keepArmorChance.tooltip": "Chance (0.0 to 1.0) to keep each equipped armor piece.",
   "config.reliable_requiem.keepOffhandChance": "Keep Offhand Chance",
   "config.reliable_requiem.keepOffhandChance.tooltip": "Chance (0.0 to 1.0) to keep the item currently held in the offhand.",
+  "config.reliable_requiem.keepAccessoriesChance": "Keep Accessories Chance",
+  "config.reliable_requiem.keepAccessoriesChance.tooltip": "Chance (0.0 to 1.0) to keep each equipped accessory (Curios/Trinkets/Accessories slots).",
   "config.reliable_requiem.keepDurabilityLoss": "Durability Loss on Keep",
   "config.reliable_requiem.keepDurabilityLoss.tooltip": "Percentage of max durability lost (0.0 to 1.0) when an item is successfully kept on death.",
   "config.reliable_requiem.defaultDestroyChance": "Destroy Dropped Item Chance",

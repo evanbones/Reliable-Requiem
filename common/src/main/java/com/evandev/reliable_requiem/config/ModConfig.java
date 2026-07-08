@@ -37,6 +37,7 @@ public class ModConfig {
     public double keepHotbarChance = 0.0;
     public double keepArmorChance = 0.0;
     public double keepOffhandChance = 0.0;
+    public double keepAccessoriesChance = 0.0;
     public double defaultDestroyChance = 0.0;
     public int dropDespawnTime = 300;
     public double keepDurabilityLoss = 0.10;
