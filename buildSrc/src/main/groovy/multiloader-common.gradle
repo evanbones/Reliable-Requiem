@@ -78,6 +78,11 @@ repositories {
         name = "Ladysnake Libs"
         url = 'https://maven.ladysnake.org/releases'
     }
+
+    maven {
+        name = "Sinytra"
+        url = 'https://maven.su5ed.dev/releases'
+    }
 }
 
 ['apiElements', 'runtimeElements'].each { variant ->

@@ -13,6 +13,10 @@ dependencies {
     // EMI
     modRuntimeOnly "dev.emi:emi-fabric:${emi_version}"
 
+    // Accessories
+    modCompileOnly "maven.modrinth:accessories:${accessories_version_fabric}"
+    modRuntimeOnly "maven.modrinth:accessories:${accessories_version_fabric}"
+
     // Trinkets
     modCompileOnly "dev.emi:trinkets:${trinkets_version}"
     modRuntimeOnly "dev.emi:trinkets:${trinkets_version}"

@@ -20,6 +20,8 @@ legacyForge {
 dependencies {
     compileOnly "me.shedaniel.cloth:cloth-config-forge:${cloth_config_version}"
     compileOnly "top.theillusivec4.curios:curios-forge:${curios_version}:api"
+    compileOnly "maven.modrinth:accessories:${accessories_version_forge}"
+    compileOnly "dev.su5ed.sinytra.fabric-api:fabric-api-base:0.4.31+ef105b4977"
 
     compileOnly 'org.jetbrains:annotations:26.0.2-1'
     compileOnly group: 'org.spongepowered', name: 'mixin', version: '0.8.5'

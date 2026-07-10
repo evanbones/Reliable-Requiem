@@ -1,5 +1,6 @@
 package com.evandev.reliable_requiem.platform;
 
+import com.evandev.reliable_requiem.compat.AccessoriesCompat;
 import com.evandev.reliable_requiem.compat.TrinketsCompat;
 import com.evandev.reliable_requiem.platform.services.IPlatformHelper;
 import net.fabricmc.api.EnvType;
@@ -36,6 +37,8 @@ public class FabricPlatformHelper implements IPlatformHelper {
 
     @Override
     public void handleAccessoryDeath(ServerPlayer player, String lastDamageSource) {
+        // Accessories handles its own death-drop logic via AccessoriesCompat's OnDeathCallback hook,
+        // registered in CommonClass#init - its containers are already emptied by the time this fires.
         if (isModLoaded("trinkets")) {
             TrinketsCompat.handleAccessoryDeath(player, lastDamageSource);
         }
@@ -43,6 +46,9 @@ public class FabricPlatformHelper implements IPlatformHelper {
 
     @Override
     public void restoreKeptAccessories(ServerPlayer newPlayer) {
+        if (isModLoaded("accessories")) {
+            AccessoriesCompat.restoreKeptAccessories(newPlayer);
+        }
         if (isModLoaded("trinkets")) {
             TrinketsCompat.restoreKeptAccessories(newPlayer);
         }

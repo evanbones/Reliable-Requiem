@@ -47,6 +47,11 @@ dependencies {
     implementation(jarJar("io.github.llamalad7:mixinextras-forge:${mixinextras_version}"))
     annotationProcessor "io.github.llamalad7:mixinextras-common:${mixinextras_version}"
 
+    // Accessories
+    modCompileOnly "maven.modrinth:accessories:${accessories_version_forge}"
+    modRuntimeOnly "maven.modrinth:accessories:${accessories_version_forge}"
+    compileOnly "dev.su5ed.sinytra.fabric-api:fabric-api-base:0.4.31+ef105b4977"
+
     // Curios
     modCompileOnly "top.theillusivec4.curios:curios-forge:${curios_version}:api"
     modRuntimeOnly "top.theillusivec4.curios:curios-forge:${curios_version}"

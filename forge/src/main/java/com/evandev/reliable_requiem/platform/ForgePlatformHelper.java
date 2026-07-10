@@ -1,5 +1,6 @@
 package com.evandev.reliable_requiem.platform;
 
+import com.evandev.reliable_requiem.compat.AccessoriesCompat;
 import com.evandev.reliable_requiem.compat.CuriosCompat;
 import com.evandev.reliable_requiem.platform.services.IPlatformHelper;
 import net.minecraft.server.level.ServerPlayer;
@@ -39,6 +40,8 @@ public class ForgePlatformHelper implements IPlatformHelper {
 
     @Override
     public void handleAccessoryDeath(ServerPlayer player, String lastDamageSource) {
+        // Accessories handles its own death-drop logic via AccessoriesCompat's OnDeathCallback hook,
+        // registered in CommonClass#init - its containers are already emptied by the time this fires.
         if (isModLoaded("curios")) {
             CuriosCompat.handleAccessoryDeath(player, lastDamageSource);
         }
@@ -46,6 +49,9 @@ public class ForgePlatformHelper implements IPlatformHelper {
 
     @Override
     public void restoreKeptAccessories(ServerPlayer newPlayer) {
+        if (isModLoaded("accessories")) {
+            AccessoriesCompat.restoreKeptAccessories(newPlayer);
+        }
         if (isModLoaded("curios")) {
             CuriosCompat.restoreKeptAccessories(newPlayer);
         }
