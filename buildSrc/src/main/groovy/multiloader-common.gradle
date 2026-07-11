@@ -73,6 +73,11 @@ repositories {
         name = "ClothConfig"
         url = "https://maven.shedaniel.me/"
     }
+
+    maven {
+        name = "Sinytra"
+        url = 'https://maven.su5ed.dev/releases'
+    }
 }
 
 ['apiElements', 'runtimeElements'].each { variant ->

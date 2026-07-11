@@ -40,9 +40,6 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
 
     @Override
     public void handleAccessoryDeath(ServerPlayer player, String lastDamageSource) {
-        if (isModLoaded("accessories")) {
-            AccessoriesCompat.handleAccessoryDeath(player, lastDamageSource);
-        }
         if (isModLoaded("curios")) {
             CuriosCompat.handleAccessoryDeath(player, lastDamageSource);
         }

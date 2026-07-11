@@ -47,6 +47,7 @@ dependencies {
     // Accessories
     implementation "maven.modrinth:accessories:${accessories_version_neoforge}"
     runtimeOnly "maven.modrinth:owo-lib:NMCHU6DZ"
+    compileOnly "org.sinytra.forgified-fabric-api:fabric-api-base:0.4.42+d1308dedd1"
 
     // Curios
     compileOnly "maven.modrinth:curios:${curios_version}"

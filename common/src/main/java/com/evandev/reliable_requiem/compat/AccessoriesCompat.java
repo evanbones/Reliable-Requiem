@@ -3,62 +3,61 @@ package com.evandev.reliable_requiem.compat;
 import com.evandev.reliable_requiem.api.IPlayerKeptItems;
 import com.evandev.reliable_requiem.modules.RequiemModules;
 import io.wispforest.accessories.api.AccessoriesCapability;
-import io.wispforest.accessories.api.AccessoriesContainer;
-import io.wispforest.accessories.impl.ExpandedSimpleContainer;
+import io.wispforest.accessories.api.events.OnDeathCallback;
+import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameRules;
 
-import java.util.Map;
+import java.util.Iterator;
+import java.util.List;
 
 public class AccessoriesCompat {
 
-    public static void handleAccessoryDeath(ServerPlayer player, String lastDamageSource) {
-        AccessoriesCapability capability = AccessoriesCapability.get(player);
-        if (capability == null) return;
+    private static boolean registered = false;
 
-        ListTag keptAccessoriesList = new ListTag();
-        Map<String, AccessoriesContainer> containers = capability.getContainers();
+    public static void register() {
+        if (registered) return;
+        registered = true;
+        OnDeathCallback.EVENT.register(AccessoriesCompat::onDeath);
+    }
 
-        containers.forEach((slotName, container) -> {
-            // Primary accessories
-            processContainer(player, slotName, container.getAccessories(), false, keptAccessoriesList);
-            // Cosmetic accessories
-            processContainer(player, slotName, container.getCosmeticAccessories(), true, keptAccessoriesList);
-        });
+    private static TriState onDeath(TriState currentState, LivingEntity entity, AccessoriesCapability capability, DamageSource source, List<ItemStack> droppedStacks) {
+        if (!(entity instanceof ServerPlayer player)) return TriState.DEFAULT;
+        if (player.level().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) return TriState.DEFAULT;
 
-        if (!keptAccessoriesList.isEmpty()) {
+        ListTag keptList = new ListTag();
+        Iterator<ItemStack> iterator = droppedStacks.iterator();
+        while (iterator.hasNext()) {
+            ItemStack stack = iterator.next();
+            if (stack.isEmpty()) continue;
+
+            if (!RequiemModules.processItemOnDeath(stack, player, -1)) {
+                iterator.remove();
+
+                if (!stack.isEmpty()) {
+                    CompoundTag tag = new CompoundTag();
+                    tag.put("Item", stack.save(player.registryAccess()));
+                    keptList.add(tag);
+                }
+            }
+        }
+
+        if (!keptList.isEmpty()) {
             CompoundTag keptAcc = ((IPlayerKeptItems) player).reliableRequiem$getKeptAccessories();
             if (keptAcc == null) {
                 keptAcc = new CompoundTag();
             }
-            keptAcc.put("Accessories", keptAccessoriesList);
+            keptAcc.put("Accessories", keptList);
             ((IPlayerKeptItems) player).reliableRequiem$setKeptAccessories(keptAcc);
         }
-    }
 
-    private static void processContainer(ServerPlayer player, String slotName, ExpandedSimpleContainer simpleContainer, boolean cosmetic, ListTag keptList) {
-        for (int i = 0; i < simpleContainer.getContainerSize(); i++) {
-            ItemStack stack = simpleContainer.getItem(i);
-            if (stack.isEmpty()) continue;
-
-            if (!RequiemModules.processItemOnDeath(stack, player, -1)) {
-                if (!stack.isEmpty()) {
-                    CompoundTag tag = new CompoundTag();
-                    tag.putString("SlotName", slotName);
-                    tag.putBoolean("Cosmetic", cosmetic);
-                    tag.putInt("Index", i);
-                    tag.put("Item", stack.save(player.registryAccess()));
-                    keptList.add(tag);
-                }
-                simpleContainer.setItem(i, ItemStack.EMPTY);
-            } else {
-                player.drop(stack, true, false);
-                simpleContainer.setItem(i, ItemStack.EMPTY);
-            }
-        }
+        return TriState.DEFAULT;
     }
 
     public static void restoreKeptAccessories(ServerPlayer player) {
@@ -67,25 +66,18 @@ public class AccessoriesCompat {
 
         ListTag accessoriesList = keptAcc.getList("Accessories", Tag.TAG_COMPOUND);
         AccessoriesCapability capability = AccessoriesCapability.get(player);
-        if (capability != null) {
-            Map<String, AccessoriesContainer> containers = capability.getContainers();
 
-            for (int i = 0; i < accessoriesList.size(); i++) {
-                CompoundTag tag = accessoriesList.getCompound(i);
-                String slotName = tag.getString("SlotName");
-                boolean cosmetic = tag.getBoolean("Cosmetic");
-                int index = tag.getInt("Index");
-                ItemStack stack = ItemStack.parseOptional(player.registryAccess(), tag.getCompound("Item"));
+        for (int i = 0; i < accessoriesList.size(); i++) {
+            CompoundTag tag = accessoriesList.getCompound(i);
+            ItemStack stack = ItemStack.parseOptional(player.registryAccess(), tag.getCompound("Item"));
+            if (stack.isEmpty()) continue;
 
-                if (!stack.isEmpty()) {
-                    AccessoriesContainer container = containers.get(slotName);
-                    if (container != null) {
-                        ExpandedSimpleContainer simpleContainer = cosmetic ? container.getCosmeticAccessories() : container.getAccessories();
-                        if (simpleContainer != null && index >= 0 && index < simpleContainer.getContainerSize()) {
-                            simpleContainer.setItem(index, stack);
-                        }
-                    }
-                }
+            if (capability != null) {
+                capability.attemptToEquipAccessory(stack);
+            }
+
+            if (!stack.isEmpty() && !player.getInventory().add(stack)) {
+                player.drop(stack, false);
             }
         }
 

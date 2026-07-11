@@ -37,9 +37,6 @@ public class FabricPlatformHelper implements IPlatformHelper {
 
     @Override
     public void handleAccessoryDeath(ServerPlayer player, String lastDamageSource) {
-        if (isModLoaded("accessories")) {
-            AccessoriesCompat.handleAccessoryDeath(player, lastDamageSource);
-        }
         if (isModLoaded("trinkets")) {
             TrinketsCompat.handleAccessoryDeath(player, lastDamageSource);
         }
