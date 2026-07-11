@@ -40,8 +40,6 @@ public class ForgePlatformHelper implements IPlatformHelper {
 
     @Override
     public void handleAccessoryDeath(ServerPlayer player, String lastDamageSource) {
-        // Accessories handles its own death-drop logic via AccessoriesCompat's OnDeathCallback hook,
-        // registered in CommonClass#init - its containers are already emptied by the time this fires.
         if (isModLoaded("curios")) {
             CuriosCompat.handleAccessoryDeath(player, lastDamageSource);
         }

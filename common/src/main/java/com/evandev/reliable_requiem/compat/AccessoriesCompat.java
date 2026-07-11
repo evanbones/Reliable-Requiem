@@ -17,13 +17,6 @@ import net.minecraft.world.level.GameRules;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Accessories drops equipped accessories itself: it mixes into dropAllDeathLoot and runs its
- * own onDeath handling *before* Player#dropEquipment is ever called, so by the time our
- * PlayerMixin#onDropEquipment injection runs, its accessory containers are already emptied.
- * We hook its OnDeathCallback instead, which fires with the about-to-be-dropped stacks still
- * available, letting us pull the ones we want to keep out of that list before Accessories drops them.
- */
 public class AccessoriesCompat {
 
     private static boolean registered = false;
