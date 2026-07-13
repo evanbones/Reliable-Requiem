@@ -4,6 +4,7 @@ import com.evandev.reliable_requiem.api.IPlayerKeptItems;
 import com.evandev.reliable_requiem.client.ClientConfigSetup;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.registries.Registries;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -12,6 +13,7 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.registries.RegisterEvent;
 
 import java.util.Map;
 
@@ -19,6 +21,7 @@ import java.util.Map;
 public class ReliableRequiem {
     public ReliableRequiem(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener(this::commonSetup);
+        modEventBus.addListener(this::register);
 
         NeoForge.EVENT_BUS.register(this);
 
@@ -27,8 +30,13 @@ public class ReliableRequiem {
         }
     }
 
+    private void register(final RegisterEvent event) {
+        if (event.getRegistryKey().equals(Registries.MOB_EFFECT)) {
+            CommonClass.init();
+        }
+    }
+
     private void commonSetup(final FMLCommonSetupEvent event) {
-        CommonClass.init();
     }
 
     @SubscribeEvent
