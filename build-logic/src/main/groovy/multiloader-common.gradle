@@ -13,56 +13,43 @@ java {
 }
 
 repositories {
-    mavenCentral()
-    exclusiveContent {
-        forRepository {
-            maven {
-                name = 'Sponge'
-                url = 'https://repo.spongepowered.org/repository/maven-public'
-            }
-        }
-        filter { includeGroupAndSubgroups('org.spongepowered') }
-    }
-
     maven {
-        name = 'BlameJared'
-        url = 'https://maven.blamejared.com'
-    }
-
-    exclusiveContent {
-        forRepository {
-            maven {
-                name = "Modrinth"
-                url = "https://api.modrinth.com/maven"
-            }
-        }
-        filter {
-            includeGroup "maven.modrinth"
+        name = "Terraformers Maven"
+        url = uri("https://maven.terraformersmc.com/releases/")
+        content {
+            includeGroupAndSubgroups("com.terraformersmc")
         }
     }
-
     maven {
-        name = 'Fabric'
-        url = 'https://maven.fabricmc.net/'
+        name = "Xander Maven"
+        url = uri("https://maven.isxander.dev/releases")
+        content {
+            includeGroupAndSubgroups("dev.isxander")
+            includeGroupAndSubgroups("org.quiltmc.parsers")
+        }
     }
-
     maven {
-        name = "TerraformersMC"
-        url = "https://maven.terraformersmc.com/"
+        name = "Quilt Maven"
+        url = uri("https://maven.quiltmc.org/repository/release/")
+        content {
+            includeGroupAndSubgroups("org.quiltmc.parsers")
+        }
     }
-
     maven {
-        name = "ClothConfig"
-        url = "https://maven.shedaniel.me/"
+        name = "Modrinth"
+        url = uri("https://api.modrinth.com/maven")
+        content {
+            includeGroupAndSubgroups("maven.modrinth")
+        }
     }
-
     maven {
         name = "Cassian's Maven"
-        url = uri("https://maven.cassian.cc")
+        url = uri("https://maven.cassian.cc/")
         content {
             includeGroupAndSubgroups("cc.cassian")
         }
     }
+    mavenCentral()
 }
 
 ['apiElements', 'runtimeElements', 'sourcesElements'].each { variant ->
@@ -117,7 +104,8 @@ processResources {
             'neoforge_version'             : neoforge_version,
             'neoforge_loader_version_range': neoforge_loader_version_range,
             'credits'                      : credits,
-            'java_version'                 : java_version
+            'java_version'                 : java_version,
+            'yacl_version'                 : yacl_version
     ]
 
     var jsonExpandProps = expandProps.collectEntries {

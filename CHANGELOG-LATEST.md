@@ -1,3 +1,2 @@
-### Fixed
-
-- Fixed Neo startup crash.
+- Ported to 26.2.
+- Switched from Cloth Config to YACL.

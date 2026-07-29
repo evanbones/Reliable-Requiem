@@ -21,6 +21,7 @@ plugins {
 }
 
 rootProject.name = 'Reliable-Requiem'
+includeBuild('build-logic')
 include('common')
 include('fabric')
 include('neoforge')
