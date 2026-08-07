@@ -28,8 +28,7 @@ Inventory).
 Tired of losing your items to creepers or the despawn timer?
 
 * **Protected Drops:** Make your death drops immune to explosions and prevent them from ever despawning.
-* **Condense Drops:** Group all dropped items and experience orbs to prevent
-  scattering.
+* **Item Spread Multiplier:** Adjust the velocity and spread of dropped items and experience orbs on death.
 
 ### Respawning
 
@@ -37,6 +36,11 @@ Customize the exact state the player is in when they return to life:
 
 * **Hunger & Saturation:** Choose to keep your food and saturation levels, or enforce minimum and maximum food caps upon
   respawning.
+* **Health Reduction on Death:** Configurable maximum health loss upon death down to a set minimum limit to encourage a
+  more cautious playstyle.
+* **Crystal Hearts & Shards:** Restore lost maximum health capacity using **Crystal Hearts**. Breaking Mob Spawners
+  drops **Crystal Shards**, 4 of which craft into a Crystal Heart. Right-clicking a Crystal Heart permanently
+  increases max health by +1 heart up to a configurable maximum limit.
 * **Health Scaling:** Respawn with a percentage of your maximum health or set a hard cap on respawn health.
 * **Status Effects:** Configurable options to let positive or negative potion effects persist through death.
 * **Experience Tweaks:** Control the exact percentage of XP lost, how much drops per level, and the maximum dropped XP.
@@ -55,7 +59,13 @@ reduces movement speed and attack damage. The duration and severity of the debuf
 
 ## Configuration
 
-Reliable Requiem includes optional [Cloth Config](https://modrinth.com/mod/cloth-config) integration so you can tweak almost every aspect of the mod on the fly and instantly apply your changes.
+Reliable Requiem includes optional [Cloth Config](https://modrinth.com/mod/cloth-config) integration so you can tweak
+almost every aspect of the mod in-game and instantly apply your changes.
+
+## Credits
+
+Thanks to the excellent [Matcha Flavoured](https://modrinth.com/datapack/matcha-flavoured) datapack for the Crystal
+Heart idea and assets. Licensed under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 
 ## License
 

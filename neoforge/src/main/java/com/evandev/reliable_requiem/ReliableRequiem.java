@@ -3,10 +3,11 @@ package com.evandev.reliable_requiem;
 import com.evandev.reliable_requiem.api.IPlayerKeptItems;
 import com.evandev.reliable_requiem.client.ClientConfigSetup;
 import com.evandev.reliable_requiem.modules.ModEffects;
+import com.evandev.reliable_requiem.modules.ModItems;
 import com.evandev.reliable_requiem.platform.Services;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
@@ -16,16 +17,19 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.registries.RegisterEvent;
 
 import java.util.Map;
 
 @Mod(Constants.MOD_ID)
 public class ReliableRequiem {
     public ReliableRequiem(IEventBus modEventBus, ModContainer modContainer) {
+        ModEffects.load();
+        ModItems.load();
+
         modEventBus.addListener(this::commonSetup);
-        modEventBus.addListener(this::onRegister);
+        modEventBus.addListener(this::onBuildCreativeTab);
 
         NeoForge.EVENT_BUS.register(this);
 
@@ -38,9 +42,10 @@ public class ReliableRequiem {
         CommonClass.init();
     }
 
-    private void onRegister(final RegisterEvent event) {
-        if (event.getRegistryKey().equals(Registries.MOB_EFFECT)) {
-            ModEffects.init();
+    private void onBuildCreativeTab(BuildCreativeModeTabContentsEvent event) {
+        if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
+            event.accept(ModItems.CRYSTAL_SHARD.get());
+            event.accept(ModItems.CRYSTAL_HEART.get());
         }
     }
 

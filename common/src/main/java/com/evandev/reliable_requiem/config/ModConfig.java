@@ -42,7 +42,7 @@ public class ModConfig {
     public int dropDespawnTime = 300;
     public double keepDurabilityLoss = 0.10;
     public boolean neverDespawnDeathDrops = false;
-    public boolean condenseDeathDrops = false;
+    public double itemSpreadMultiplier = 1.0;
     public boolean explosionResistantDeathDrops = false;
 
     // Item Overrides
@@ -68,6 +68,14 @@ public class ModConfig {
     public boolean scaleRespawnHealth = false;
     public double respawnHealthPercent = 1.0;
     public double maxRespawnHealth = 20.0;
+    public boolean enableHealthReductionOnDeath = false;
+    public double healthLossPerDeath = 2.0;
+    public double minMaxHealth = 10.0;
+    public double maxMaxHealth = 30.0;
+    public double crystalHeartHealthAmount = 2.0;
+    public boolean enableSpawnerShardDrop = true;
+    public double spawnerShardDropChance = 1.0;
+    public int spawnerShardDropCount = 1;
 
     // Miscellaneous Settings
     public boolean restrictRespawning = false;

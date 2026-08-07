@@ -12,6 +12,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
 import net.minecraft.world.item.Item;
@@ -45,7 +47,7 @@ public class RequiemModules {
             for (MobEffectInstance effectInstance : original.getActiveEffects()) {
                 boolean isHarmful = effectInstance.getEffect().value().getCategory() == MobEffectCategory.HARMFUL;
                 if ((isHarmful && config.keepNegativeEffects) || (!isHarmful && config.keepPositiveEffects)) {
-                    if (effectInstance.getEffect().equals(ModEffects.MEMENTO_MORI)) continue;
+                    if (effectInstance.getEffect().equals(ModEffects.MEMENTO_MORI.asHolder())) continue;
                     newPlayer.addEffect(new MobEffectInstance(effectInstance));
                 }
             }
@@ -62,10 +64,20 @@ public class RequiemModules {
 
         // Memento Mori
         if (config.applyMementoMori) {
-            newPlayer.addEffect(new MobEffectInstance(ModEffects.MEMENTO_MORI, config.mementoDuration));
+            newPlayer.addEffect(new MobEffectInstance(ModEffects.MEMENTO_MORI.asHolder(), config.mementoDuration));
         }
 
         // Health Module
+        AttributeInstance oldMaxHealthAttr = original.getAttribute(Attributes.MAX_HEALTH);
+        AttributeInstance newMaxHealthAttr = newPlayer.getAttribute(Attributes.MAX_HEALTH);
+        if (oldMaxHealthAttr != null && newMaxHealthAttr != null) {
+            double currentMax = oldMaxHealthAttr.getBaseValue();
+            if (config.enableHealthReductionOnDeath) {
+                currentMax = Math.max(config.minMaxHealth, Math.min(config.maxMaxHealth, currentMax - config.healthLossPerDeath));
+            }
+            newMaxHealthAttr.setBaseValue(currentMax);
+        }
+
         double maxHealth = newPlayer.getMaxHealth();
         double targetHealth = config.scaleRespawnHealth ? (maxHealth * config.respawnHealthPercent) : maxHealth;
         targetHealth = Math.min(targetHealth, config.maxRespawnHealth);

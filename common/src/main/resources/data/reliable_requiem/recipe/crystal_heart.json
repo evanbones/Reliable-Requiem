@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SS",
+    "SS"
+  ],
+  "key": {
+    "S": {
+      "item": "reliable_requiem:crystal_shard"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "reliable_requiem:crystal_heart"
+  }
+}

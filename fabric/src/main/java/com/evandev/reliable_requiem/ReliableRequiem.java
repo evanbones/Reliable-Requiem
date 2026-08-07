@@ -2,10 +2,13 @@ package com.evandev.reliable_requiem;
 
 import com.evandev.reliable_requiem.api.IPlayerKeptItems;
 import com.evandev.reliable_requiem.modules.ModEffects;
+import com.evandev.reliable_requiem.modules.ModItems;
 import com.evandev.reliable_requiem.platform.Services;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Map;
@@ -15,7 +18,14 @@ public class ReliableRequiem implements ModInitializer {
     @Override
     public void onInitialize() {
         CommonClass.init();
-        ModEffects.init();
+        ModEffects.load();
+        ModItems.load();
+
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.INGREDIENTS)
+                .register(content -> {
+                    content.accept(ModItems.CRYSTAL_SHARD.get());
+                    content.accept(ModItems.CRYSTAL_HEART.get());
+                });
 
         ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) -> {
             boolean wasDeath = !alive;

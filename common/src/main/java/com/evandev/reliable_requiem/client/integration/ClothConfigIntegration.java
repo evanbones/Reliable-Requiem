@@ -102,10 +102,10 @@ public class ClothConfigIntegration {
                 .setDefaultValue(false)
                 .setTooltip(Component.translatable("config.reliable_requiem.neverDespawnDeathDrops.tooltip"))
                 .setSaveConsumer(val -> config.neverDespawnDeathDrops = val).build());
-        inventory.addEntry(entryBuilder.startBooleanToggle(Component.translatable("config.reliable_requiem.condenseDeathDrops"), config.condenseDeathDrops)
-                .setDefaultValue(false)
-                .setTooltip(Component.translatable("config.reliable_requiem.condenseDeathDrops.tooltip"))
-                .setSaveConsumer(val -> config.condenseDeathDrops = val).build());
+        inventory.addEntry(entryBuilder.startDoubleField(Component.translatable("config.reliable_requiem.itemSpreadMultiplier"), config.itemSpreadMultiplier)
+                .setDefaultValue(1.0).setMin(0.0).setMax(10.0)
+                .setTooltip(Component.translatable("config.reliable_requiem.itemSpreadMultiplier.tooltip"))
+                .setSaveConsumer(val -> config.itemSpreadMultiplier = val).build());
         inventory.addEntry(entryBuilder.startBooleanToggle(Component.translatable("config.reliable_requiem.explosionResistantDeathDrops"), config.explosionResistantDeathDrops)
                 .setDefaultValue(false)
                 .setTooltip(Component.translatable("config.reliable_requiem.explosionResistantDeathDrops.tooltip"))
@@ -150,6 +150,38 @@ public class ClothConfigIntegration {
                 .setDefaultValue(20.0).setMin(1.0)
                 .setTooltip(Component.translatable("config.reliable_requiem.maxRespawnHealth.tooltip"))
                 .setSaveConsumer(val -> config.maxRespawnHealth = val).build());
+        healthAndSpawn.addEntry(entryBuilder.startBooleanToggle(Component.translatable("config.reliable_requiem.enableHealthReductionOnDeath"), config.enableHealthReductionOnDeath)
+                .setDefaultValue(false)
+                .setTooltip(Component.translatable("config.reliable_requiem.enableHealthReductionOnDeath.tooltip"))
+                .setSaveConsumer(val -> config.enableHealthReductionOnDeath = val).build());
+        healthAndSpawn.addEntry(entryBuilder.startDoubleField(Component.translatable("config.reliable_requiem.healthLossPerDeath"), config.healthLossPerDeath)
+                .setDefaultValue(2.0).setMin(0.0)
+                .setTooltip(Component.translatable("config.reliable_requiem.healthLossPerDeath.tooltip"))
+                .setSaveConsumer(val -> config.healthLossPerDeath = val).build());
+        healthAndSpawn.addEntry(entryBuilder.startDoubleField(Component.translatable("config.reliable_requiem.minMaxHealth"), config.minMaxHealth)
+                .setDefaultValue(6.0).setMin(1.0)
+                .setTooltip(Component.translatable("config.reliable_requiem.minMaxHealth.tooltip"))
+                .setSaveConsumer(val -> config.minMaxHealth = val).build());
+        healthAndSpawn.addEntry(entryBuilder.startDoubleField(Component.translatable("config.reliable_requiem.maxMaxHealth"), config.maxMaxHealth)
+                .setDefaultValue(30.0).setMin(1.0)
+                .setTooltip(Component.translatable("config.reliable_requiem.maxMaxHealth.tooltip"))
+                .setSaveConsumer(val -> config.maxMaxHealth = val).build());
+        healthAndSpawn.addEntry(entryBuilder.startDoubleField(Component.translatable("config.reliable_requiem.crystalHeartHealthAmount"), config.crystalHeartHealthAmount)
+                .setDefaultValue(2.0).setMin(0.5)
+                .setTooltip(Component.translatable("config.reliable_requiem.crystalHeartHealthAmount.tooltip"))
+                .setSaveConsumer(val -> config.crystalHeartHealthAmount = val).build());
+        healthAndSpawn.addEntry(entryBuilder.startBooleanToggle(Component.translatable("config.reliable_requiem.enableSpawnerShardDrop"), config.enableSpawnerShardDrop)
+                .setDefaultValue(true)
+                .setTooltip(Component.translatable("config.reliable_requiem.enableSpawnerShardDrop.tooltip"))
+                .setSaveConsumer(val -> config.enableSpawnerShardDrop = val).build());
+        healthAndSpawn.addEntry(entryBuilder.startDoubleField(Component.translatable("config.reliable_requiem.spawnerShardDropChance"), config.spawnerShardDropChance)
+                .setDefaultValue(1.0).setMin(0.0).setMax(1.0)
+                .setTooltip(Component.translatable("config.reliable_requiem.spawnerShardDropChance.tooltip"))
+                .setSaveConsumer(val -> config.spawnerShardDropChance = val).build());
+        healthAndSpawn.addEntry(entryBuilder.startIntField(Component.translatable("config.reliable_requiem.spawnerShardDropCount"), config.spawnerShardDropCount)
+                .setDefaultValue(1).setMin(1).setMax(64)
+                .setTooltip(Component.translatable("config.reliable_requiem.spawnerShardDropCount.tooltip"))
+                .setSaveConsumer(val -> config.spawnerShardDropCount = val).build());
         healthAndSpawn.addEntry(entryBuilder.startIntField(Component.translatable("config.reliable_requiem.respawnRandomRadius"), config.respawnRandomRadius)
                 .setDefaultValue(0).setMin(0)
                 .setTooltip(Component.translatable("config.reliable_requiem.respawnRandomRadius.tooltip"))

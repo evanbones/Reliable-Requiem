@@ -14,6 +14,8 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -22,6 +24,7 @@ import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -119,8 +122,12 @@ public abstract class PlayerMixin implements IPlayerKeptItems {
         if (droppedItem != null && player.isDeadOrDying()) {
             ((IRequiemItem) droppedItem).reliableRequiem$setDroppedOnDeath(true);
 
-            if (ModConfig.get().enabled && ModConfig.get().condenseDeathDrops) {
-                droppedItem.setDeltaMovement(0, 0, 0);
+            if (ModConfig.get().enabled) {
+                double multiplier = ModConfig.get().itemSpreadMultiplier;
+                if (multiplier != 1.0) {
+                    Vec3 delta = droppedItem.getDeltaMovement();
+                    droppedItem.setDeltaMovement(delta.x * multiplier, delta.y * multiplier, delta.z * multiplier);
+                }
             }
         }
     }
@@ -193,6 +200,11 @@ public abstract class PlayerMixin implements IPlayerKeptItems {
         if (this.reliableRequiem$lastDamageSource != null) {
             compound.putString("ReliableRequiem_DamageSource", this.reliableRequiem$lastDamageSource);
         }
+
+        AttributeInstance maxHealthAttr = player.getAttribute(Attributes.MAX_HEALTH);
+        if (maxHealthAttr != null) {
+            compound.putDouble("ReliableRequiem_MaxHealth", maxHealthAttr.getBaseValue());
+        }
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
@@ -229,6 +241,13 @@ public abstract class PlayerMixin implements IPlayerKeptItems {
         }
         if (compound.contains("ReliableRequiem_DamageSource")) {
             this.reliableRequiem$lastDamageSource = compound.getString("ReliableRequiem_DamageSource");
+        }
+        if (compound.contains("ReliableRequiem_MaxHealth")) {
+            double savedMaxHealth = compound.getDouble("ReliableRequiem_MaxHealth");
+            AttributeInstance maxHealthAttr = player.getAttribute(Attributes.MAX_HEALTH);
+            if (maxHealthAttr != null && savedMaxHealth > 0) {
+                maxHealthAttr.setBaseValue(savedMaxHealth);
+            }
         }
     }
 

@@ -6,6 +6,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -20,14 +21,18 @@ public abstract class ExperienceOrbMixin extends Entity {
 
     @Inject(method = "<init>(Lnet/minecraft/world/level/Level;DDDI)V", at = @At("TAIL"))
     private void reliableRequiem$condenseExperience(Level level, double x, double y, double z, int value, CallbackInfo ci) {
-        if (ModConfig.get().enabled && ModConfig.get().condenseDeathDrops) {
-            boolean isFromDeath = !level.getEntitiesOfClass(Player.class,
-                            this.getBoundingBox().inflate(0.5)).stream()
-                    .filter(Player::isDeadOrDying)
-                    .toList().isEmpty();
+        if (ModConfig.get().enabled) {
+            double multiplier = ModConfig.get().itemSpreadMultiplier;
+            if (multiplier != 1.0) {
+                boolean isFromDeath = !level.getEntitiesOfClass(Player.class,
+                                this.getBoundingBox().inflate(0.5)).stream()
+                        .filter(Player::isDeadOrDying)
+                        .toList().isEmpty();
 
-            if (isFromDeath) {
-                this.setDeltaMovement(0, 0, 0);
+                if (isFromDeath) {
+                    Vec3 delta = this.getDeltaMovement();
+                    this.setDeltaMovement(delta.x * multiplier, delta.y * multiplier, delta.z * multiplier);
+                }
             }
         }
     }
