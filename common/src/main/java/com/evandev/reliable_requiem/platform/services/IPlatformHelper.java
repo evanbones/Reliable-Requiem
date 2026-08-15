@@ -1,6 +1,7 @@
 package com.evandev.reliable_requiem.platform.services;
 
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 
 import java.nio.file.Path;
 
@@ -60,4 +61,10 @@ public interface IPlatformHelper {
      * Restores any kept accessories to the player upon cloning.
      */
     void restoreKeptAccessories(ServerPlayer newPlayer);
+
+    /**
+     * Synchronizes health and heart count with Heart Crystals if present.
+     */
+    default void updateHeartCrystalsHealth(Player player, double maxHealth) {
+    }
 }

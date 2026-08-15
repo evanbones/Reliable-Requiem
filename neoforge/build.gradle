@@ -51,6 +51,11 @@ dependencies {
 
     // Curios
     compileOnly "maven.modrinth:curios:${curios_version}"
+
+    // Heart Crystals
+    compileOnly "maven.modrinth:heart_crystals:${heart_crystals_version}"
+    runtimeOnly "maven.modrinth:heart_crystals:${heart_crystals_version}"
+    runtimeOnly "maven.modrinth:blueprint:${blueprint_version}"
 }
 
 publishMods {

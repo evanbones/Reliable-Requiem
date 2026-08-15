@@ -3,6 +3,7 @@ package com.evandev.reliable_requiem.modules;
 import com.evandev.reliable_requiem.Constants;
 import com.evandev.reliable_requiem.api.IPlayerKeptItems;
 import com.evandev.reliable_requiem.config.ModConfig;
+import com.evandev.reliable_requiem.platform.Services;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -76,6 +77,7 @@ public class RequiemModules {
                 currentMax = Math.max(config.minMaxHealth, Math.min(config.maxMaxHealth, currentMax - config.healthLossPerDeath));
             }
             newMaxHealthAttr.setBaseValue(currentMax);
+            Services.PLATFORM.updateHeartCrystalsHealth(newPlayer, currentMax);
         }
 
         double maxHealth = newPlayer.getMaxHealth();
@@ -104,6 +106,16 @@ public class RequiemModules {
     public static void onPlayerRespawn(ServerPlayer player) {
         for (MobEffectInstance effectInstance : player.getActiveEffects()) {
             player.connection.send(new ClientboundUpdateMobEffectPacket(player.getId(), effectInstance, true));
+        }
+
+        ModConfig config = ModConfig.get();
+        if (config.enabled && config.scaleRespawnHealth) {
+            AttributeInstance maxHealthAttr = player.getAttribute(Attributes.MAX_HEALTH);
+            if (maxHealthAttr != null) {
+                double maxHealth = maxHealthAttr.getValue();
+                double targetHealth = Math.min(maxHealth * config.respawnHealthPercent, config.maxRespawnHealth);
+                player.setHealth((float) Math.max(1.0, targetHealth));
+            }
         }
     }
 

@@ -1,6 +1,7 @@
 package com.evandev.reliable_requiem.item;
 
 import com.evandev.reliable_requiem.config.ModConfig;
+import com.evandev.reliable_requiem.platform.Services;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -39,6 +40,7 @@ public class CrystalHeartItem extends Item {
             if (!level.isClientSide()) {
                 double newMax = Math.min(config.maxMaxHealth, currentMax + config.crystalHeartHealthAmount);
                 maxHealthAttr.setBaseValue(newMax);
+                Services.PLATFORM.updateHeartCrystalsHealth(player, newMax);
                 player.heal((float) config.crystalHeartHealthAmount);
 
                 level.playSound(
