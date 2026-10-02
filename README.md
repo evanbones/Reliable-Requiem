@@ -18,7 +18,8 @@ conditions, offering a customizable alternative to the `keepInventory` gamerule.
 You can configure percentage chances to keep items in specific inventory sections (Hotbar, Armor, Offhand, and Main
 Inventory).
 
-* **Durability Penalty:** Apply a configurable percentage of durability loss to items that are kept through death.
+* **Durability Penalty:** Apply a configurable percentage of durability loss to items that are kept through death, with
+  an optional minimum durability percentage and a toggle to prevent kept items from breaking.
 * **Item Overrides:** Specify exact items to always keep, always drop, or be completely destroyed on death.
 * **Tag Support:** Built-in support for the `c:soulbound` enchantment tag and an additional
   `reliable_requiem:retained_on_death` item tag to retain specific items.
@@ -59,7 +60,7 @@ reduces movement speed and attack damage. The duration and severity of the debuf
 
 ## Configuration
 
-Reliable Requiem includes optional [Cloth Config](https://modrinth.com/mod/cloth-config) integration so you can tweak
+Reliable Requiem includes optional [YACL](https://modrinth.com/mod/yacl) integration so you can tweak
 almost every aspect of the mod in-game and instantly apply your changes.
 
 ## Credits

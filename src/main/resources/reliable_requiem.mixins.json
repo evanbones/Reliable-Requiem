@@ -1,0 +1,21 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.evandev.reliable_requiem.mixin",
+  "compatibilityLevel": "JAVA_${java_version}",
+  "mixins": [
+    "BlockMixin",
+    "ExperienceOrbMixin",
+    "ItemEntityMixin",
+    "LivingEntityMixin",
+    "PlayerMixin",
+    "ServerPlayerMixin"
+  ],
+  "client": [
+    "DeathScreenMixin"
+  ],
+  "server": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

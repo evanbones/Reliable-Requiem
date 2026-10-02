@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "version": "${version}",
+  "name": "${mod_name}",
+  "description": "${description}",
+  "authors": [
+    "${mod_author}"
+  ],
+  "contact": {
+    "homepage": "https://github.com/evanbones/Reliable-Requiem",
+    "sources": "https://github.com/evanbones/Reliable-Requiem",
+    "issues": "https://github.com/evanbones/Reliable-Requiem/issues"
+  },
+  "license": "${license}",
+  "icon": "${mod_id}.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.evandev.reliable_requiem.fabric.ReliableRequiemMod"
+    ],
+    "modmenu": [
+      "com.evandev.reliable_requiem.fabric.compat.ModMenuIntegration"
+    ]
+  },
+  "mixins": [
+    "${mod_id}.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${fabric_loader_version}",
+    "fabric-api": "*",
+    "minecraft": "${minecraft}",
+    "java": ">=${java_version}"
+  },
+  "suggests": {
+    "yet_another_config_lib_v3": ">=${yacl_version}"
+  }
+}
